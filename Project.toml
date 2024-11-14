@@ -1,0 +1,4 @@
+name = "nImageData"
+uuid = "182af4f8-76a9-41f7-bb95-c9e702953417"
+authors = ["julia-KAERI <julia.kaeri@gmail.com>"]
+version = "0.1.0"
