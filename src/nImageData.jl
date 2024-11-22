@@ -1,5 +1,9 @@
 module nImageData
 
-greet() = print("Hello World!")
+include("base.jl")
+include("transforms.jl")
+
+export ImageData,
+    rotate
 
 end # module nImageData
