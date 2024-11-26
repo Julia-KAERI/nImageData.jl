@@ -32,7 +32,7 @@ Base.getindex(idt::ImageData{T}, idx...) where T= Base.getindex(idt.mat, idx...)
 Base.getindex(idt::ImageData{T}, inds::Vararg{Int,N}) where {T,N} = idt.mat[inds...]
 
 Base.setindex!(idt::ImageData{T}, idx...) where T = Base.setindex!(idt.mat, idx...)
-Base.setindex!(idt::ImageData{T}, val, inds::Vararg{Int, 2}) where T = A.data[inds...] = val
+Base.setindex!(idt::ImageData{T}, val, inds::Vararg{Int, N}) where {T,N} = idt.mat[inds...]
 
 Base.showarg(io::IO, idt::ImageData, toplevel) = print(io, typeof(idt))
 
@@ -61,3 +61,30 @@ find_aac(::Tuple{}) = nothing
 find_aac(a::ImageData, rest) = a
 find_aac(::Any, rest) = find_aac(rest)
 
+
+
+# OpenCV.Mat and Array compatibiliby function
+
+"""
+    Mat2Array(img::OpenCV.Mat{T}
+
+convert `OpenCV.Mat{T}` to `Array{T, 3}`
+"""
+function Mat2Array(img::OpenCV.Mat{T}) where T<:Integer
+    return permutedims(img.data, [3,2,1])
+end
+
+"""
+    Array2Mat(img::Array{T})
+
+convert `Array{T, N}` to `Array{T, 3}` only for N = 2 or 3.
+"""
+function Array2Mat(img::Array{T}) where {T<:Real}
+    ll = length(size(img))
+    @assert ll ∈ (2, 3)
+    if ll == 3 
+        return OpenCV.Mat(permutedims(img, [3,1,2]))
+    else 
+        return OpenCV.Mat(permutedims(stack([img, ]), [3,1,2]))
+    end
+end
