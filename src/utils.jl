@@ -22,3 +22,5 @@ function mat2gray(mat::Matrix{T}, range::Union{Nothing, Tuple{Real, Real}} = not
 end
 
 mat2gray(idt::ImageData{T}, range::Union{Nothing, Tuple{Real, Real}} = nothing ) where T<:Real = mat2gray(idt.mat, range)
+
+mat2gray(mat::OpenCV.Mat{T}, range::Union{Nothing, Tuple{Real, Real}} = nothing ) where T<:Real = mat2gray(Mat2Array(mat)[:,:,1], range)

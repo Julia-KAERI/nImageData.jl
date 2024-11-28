@@ -32,3 +32,11 @@ function (flt::MedianFilter)(img::Matrix{<:Real})
     result = Mat2Array(OpenCV.medianBlur(_img, flt.ksize))
     return result
 end
+
+function (flt::MedianFilter)(img::ImageData{<:Real})
+    return ImageData((img.mat |> MedianFilter(flt.ksize))[:,:,1])
+end
+
+function (flt::MedianFilter)(img::OpenCV.Mat{T}) where T<:Real
+    return OpenCV.medianBlur(img, flt.ksize)
+end

@@ -11,6 +11,10 @@ struct ImageData{T} <: AbstractArray{T, 2}
     function ImageData(mat::Matrix{T}) where T<:Real
         return new{T}(mat)
     end
+
+    function ImageData(mat::OpenCV.Mat{T}) where T<:Real
+        return new{T}(permutedims(mat.data, [3,2,1])[:,:,1])
+    end
 end
 
 Matrix{T}(idt::ImageData) where T= Matrix{T}(idt.mat)
@@ -83,8 +87,13 @@ function Array2Mat(img::Array{T}) where {T<:Real}
     ll = length(size(img))
     @assert ll ∈ (2, 3)
     if ll == 3 
-        return OpenCV.Mat(permutedims(img, [3,1,2]))
+        return OpenCV.Mat(permutedims(img, [3,2,1]))
     else 
-        return OpenCV.Mat(permutedims(stack([img, ]), [3,1,2]))
+        return OpenCV.Mat(permutedims(stack([img, ]), [3,2,1]))
     end
 end
+
+
+# ImageData to Array conversion
+Array{T1}(idt::ImageData{T2}) where {T1<:Real, T2<:Real} =  idt.mat[:,:]
+
