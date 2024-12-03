@@ -93,6 +93,17 @@ function Array2Mat(img::Array{T}) where {T<:Real}
     end
 end
 
+function Mat2ImageData(img::OpenCV.Mat) 
+    return ImageData(Mat2Array(img.data)[:,:,1])
+end
+
+function ImageData2Mat(img::ImageData)
+    return OpenCV.Mat(Array2Mat(img.mat))
+end
+
+
+function _copy2Mat(img::Array{T}) where {T<:Real}
+end
 
 # ImageData to Array conversion
 Array{T1}(idt::ImageData{T2}) where {T1<:Real, T2<:Real} =  idt.mat[:,:]
